@@ -11,6 +11,7 @@ import Tasks from "./pages/Tasks";
 import Team from "./pages/Team";
 import Meetings from "./pages/Meetings";
 import Finance from "./pages/Finance";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { UserProvider } from "./components/UserProvider";
@@ -75,6 +76,14 @@ const App = () => (
                 element={
                   <AppLayout>
                     <Finance />
+                  </AppLayout>
+                } 
+              />
+              <Route 
+                path="/settings" 
+                element={
+                  <AppLayout>
+                    <Settings />
                   </AppLayout>
                 } 
               />

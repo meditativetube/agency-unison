@@ -8,7 +8,8 @@ import {
   Calendar, 
   DollarSign,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Settings
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
@@ -49,7 +50,8 @@ const Sidebar = () => {
     { to: '/tasks', icon: CheckSquare, label: 'Tasks' },
     { to: '/team', icon: Users, label: 'Team' },
     { to: '/meetings', icon: Calendar, label: 'Meetings' },
-    { to: '/finance', icon: DollarSign, label: 'Finance' }
+    { to: '/finance', icon: DollarSign, label: 'Finance' },
+    { to: '/settings', icon: Settings, label: 'Settings' }
   ];
 
   return (
