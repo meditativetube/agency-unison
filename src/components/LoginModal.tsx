@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useUser } from './UserProvider';
-import { Google, Mail, LogIn, Microsoft } from 'lucide-react';
+import { Mail, LogIn, GithubIcon, CreditCard } from 'lucide-react';
 
 type LoginTab = 'credentials' | 'external';
 
@@ -130,7 +130,7 @@ const LoginModal = () => {
                 variant="outline" 
                 className="w-full justify-start gap-2"
               >
-                <Google className="h-5 w-5 text-[#4285F4]" />
+                <GithubIcon className="h-5 w-5 text-[#4285F4]" />
                 <span>Continue with Google</span>
               </Button>
               
@@ -139,7 +139,7 @@ const LoginModal = () => {
                 variant="outline" 
                 className="w-full justify-start gap-2"
               >
-                <Microsoft className="h-5 w-5 text-[#00A4EF]" />
+                <CreditCard className="h-5 w-5 text-[#00A4EF]" />
                 <span>Continue with Microsoft</span>
               </Button>
               
