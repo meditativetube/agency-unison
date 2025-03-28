@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { useUser } from './UserProvider';
 
 type TeamMember = {
   id: string;
@@ -12,6 +13,8 @@ type TeamMember = {
 };
 
 const TeamMembers = () => {
+  const { isAdmin } = useUser();
+  
   // Sample data
   const members: TeamMember[] = [
     { id: '1', name: 'John Smith', role: 'Project Manager', avatarUrl: '', department: 'Management' },
@@ -29,9 +32,16 @@ const TeamMembers = () => {
   };
 
   return (
-    <Card>
+    <Card className="dark:bg-gray-800 dark:border-gray-700">
       <CardHeader>
-        <CardTitle>Team Members</CardTitle>
+        <CardTitle className="flex justify-between items-center">
+          <span>Team Members</span>
+          {isAdmin && (
+            <span className="text-xs bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 px-2 py-0.5 rounded">
+              Admin Access
+            </span>
+          )}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -42,11 +52,11 @@ const TeamMembers = () => {
                 <AvatarFallback>{getInitials(member.name)}</AvatarFallback>
               </Avatar>
               <div>
-                <div className="font-medium">{member.name}</div>
-                <div className="text-sm text-gray-500">{member.role}</div>
+                <div className="font-medium dark:text-gray-200">{member.name}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">{member.role}</div>
               </div>
               <div className="ml-auto">
-                <div className="text-sm text-gray-500">{member.department}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">{member.department}</div>
               </div>
             </div>
           ))}

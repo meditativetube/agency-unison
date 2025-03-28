@@ -30,8 +30,8 @@ const SidebarLink = ({
       className={cn(
         "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
         isActive 
-          ? "bg-blue-100 text-blue-700 font-medium" 
-          : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+          ? "bg-blue-100 text-blue-700 font-medium dark:bg-blue-900 dark:text-blue-200" 
+          : "text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
       )}
     >
       <Icon className="h-5 w-5" />
@@ -55,7 +55,7 @@ const Sidebar = () => {
   return (
     <div 
       className={cn(
-        "flex flex-col border-r bg-white transition-all duration-300",
+        "flex flex-col border-r transition-all duration-300 bg-white dark:bg-gray-900 dark:border-gray-800",
         collapsed ? "w-16" : "w-64"
       )}
     >
