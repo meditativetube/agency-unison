@@ -18,7 +18,7 @@ const SalaryManagement = () => {
   const [newUser, setNewUser] = useState({
     name: '',
     email: '',
-    role: 'user' as const,
+    role: 'user' as 'admin' | 'cofounder' | 'user', // Fixed this type definition
     salary: 0
   });
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
@@ -83,7 +83,7 @@ const SalaryManagement = () => {
     setNewUser({
       name: '',
       email: '',
-      role: 'user',
+      role: 'user' as 'admin' | 'cofounder' | 'user', // Fixed this type definition too
       salary: 0
     });
 
