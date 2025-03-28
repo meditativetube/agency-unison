@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState } from 'react';
 
 type UserRole = 'admin' | 'cofounder' | 'user';
+type AuthProvider = 'password' | 'google' | 'microsoft' | 'gmail';
 
 interface User {
   id: string;
@@ -10,6 +11,7 @@ interface User {
   role: UserRole;
   salary?: number;
   avatar?: string;
+  authProvider?: AuthProvider;
 }
 
 interface UserContextType {
@@ -31,6 +33,7 @@ const mockUsers: User[] = [
     email: 'admin@agencyunison.com',
     role: 'admin',
     salary: 95000,
+    authProvider: 'password',
   },
   {
     id: '2',
@@ -38,6 +41,8 @@ const mockUsers: User[] = [
     email: 'john@agencyunison.com',
     role: 'cofounder',
     salary: 110000,
+    authProvider: 'google',
+    avatar: 'https://ui-avatars.com/api/?name=John+Cofounder&background=0D8ABC&color=fff',
   },
   {
     id: '3',
@@ -45,6 +50,8 @@ const mockUsers: User[] = [
     email: 'sarah@agencyunison.com',
     role: 'user',
     salary: 65000,
+    authProvider: 'microsoft',
+    avatar: 'https://ui-avatars.com/api/?name=Sarah+Team&background=00A36C&color=fff',
   },
   {
     id: '4',
@@ -52,6 +59,8 @@ const mockUsers: User[] = [
     email: 'mike@agencyunison.com',
     role: 'admin',
     salary: 90000,
+    authProvider: 'gmail',
+    avatar: 'https://ui-avatars.com/api/?name=Mike+Admin&background=D14836&color=fff',
   },
   {
     id: '5',
@@ -59,6 +68,8 @@ const mockUsers: User[] = [
     email: 'emma@agencyunison.com',
     role: 'user',
     salary: 72000,
+    authProvider: 'password',
+    avatar: 'https://ui-avatars.com/api/?name=Emma+Designer&background=551A8B&color=fff',
   }
 ];
 
