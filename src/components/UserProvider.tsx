@@ -8,14 +8,17 @@ interface User {
   name: string;
   email: string;
   role: UserRole;
+  salary?: number;
   avatar?: string;
 }
 
 interface UserContextType {
   currentUser: User | null;
   isAdmin: boolean;
+  allUsers: User[];
   login: (user: User) => void;
   logout: () => void;
+  setUsers: (users: User[]) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -27,24 +30,42 @@ const mockUsers: User[] = [
     name: 'Admin User',
     email: 'admin@agencyunison.com',
     role: 'admin',
+    salary: 95000,
   },
   {
     id: '2',
     name: 'John Cofounder',
     email: 'john@agencyunison.com',
     role: 'cofounder',
+    salary: 110000,
   },
   {
     id: '3',
     name: 'Sarah Team',
     email: 'sarah@agencyunison.com',
     role: 'user',
+    salary: 65000,
+  },
+  {
+    id: '4',
+    name: 'Mike Admin',
+    email: 'mike@agencyunison.com',
+    role: 'admin',
+    salary: 90000,
+  },
+  {
+    id: '5',
+    name: 'Emma Designer',
+    email: 'emma@agencyunison.com',
+    role: 'user',
+    salary: 72000,
   }
 ];
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   // For demo purposes, we'll start with the admin user logged in
   const [currentUser, setCurrentUser] = useState<User | null>(mockUsers[0]);
+  const [users, setUsers] = useState<User[]>(mockUsers);
 
   const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'cofounder';
 
@@ -57,7 +78,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <UserContext.Provider value={{ currentUser, isAdmin, login, logout }}>
+    <UserContext.Provider value={{ 
+      currentUser, 
+      isAdmin, 
+      allUsers: users,
+      login, 
+      logout,
+      setUsers
+    }}>
       {children}
     </UserContext.Provider>
   );

@@ -1,10 +1,11 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { DollarSign, TrendingUp, TrendingDown, Plus, Filter, Download } from 'lucide-react';
+import SalaryManagement from '@/components/SalaryManagement';
+import { useUser } from '@/components/UserProvider';
 
 const BudgetCard = ({ 
   title, 
@@ -101,6 +102,8 @@ const SalaryCard = ({
 };
 
 const Finance = () => {
+  const { isAdmin } = useUser();
+  
   // Sample budget data
   const budgets = [
     { title: "Q4 Project Budget", allocated: 50000, spent: 32000, department: "All Departments" },
@@ -186,12 +189,17 @@ const Finance = () => {
         </Card>
       </div>
 
-      <Tabs defaultValue="budgets">
+      <Tabs defaultValue="salaries">
         <TabsList>
-          <TabsTrigger value="budgets">Budgets</TabsTrigger>
           <TabsTrigger value="salaries">Salaries</TabsTrigger>
+          <TabsTrigger value="budgets">Budgets</TabsTrigger>
           <TabsTrigger value="expenses">Expenses</TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="salaries" className="mt-4">
+          <SalaryManagement />
+        </TabsContent>
+        
         <TabsContent value="budgets" className="mt-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {budgets.map((budget, index) => (
@@ -199,26 +207,7 @@ const Finance = () => {
             ))}
           </div>
         </TabsContent>
-        <TabsContent value="salaries" className="mt-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>Team Salaries</CardTitle>
-                <CardDescription>Manage your team's compensation</CardDescription>
-              </div>
-              <Button variant="outline" size="sm">
-                <Filter className="mr-2 h-4 w-4" /> Filter
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {salaries.map((salary, index) => (
-                  <SalaryCard key={index} {...salary} />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        
         <TabsContent value="expenses" className="mt-4">
           <Card>
             <CardContent className="p-6">
