@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Bell, Search, Settings, Sun, Moon } from 'lucide-react';
+import { Bell, Search, Settings, Sun, Moon, Building } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { useTheme } from './ThemeProvider';
@@ -12,7 +12,7 @@ import LoginModal from './LoginModal';
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
-  const { currentUser, logout } = useUser();
+  const { currentUser, logout, agencies, activeAgency, switchAgency } = useUser();
 
   const getInitials = (name: string) => {
     return name
@@ -28,6 +28,38 @@ const Navbar = () => {
         <div className="flex items-center gap-2 font-bold text-xl text-blue-600 dark:text-blue-400">
           <Link to="/">AgencyUnison</Link>
         </div>
+        
+        {currentUser && currentUser.agencies && currentUser.agencies.length > 1 && (
+          <div className="ml-6">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Building className="h-4 w-4" />
+                  <span>{activeAgency?.name || "Select Agency"}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuLabel>Switch Agency</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {currentUser.agencies.map((agency) => (
+                  <DropdownMenuItem 
+                    key={agency.id}
+                    onClick={() => switchAgency(agency.id)}
+                    className={agency.id === currentUser.activeAgencyId ? "bg-blue-50 dark:bg-blue-900/20" : ""}
+                  >
+                    <div className="flex items-center gap-2 w-full">
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage src={agency.logo} />
+                        <AvatarFallback>{getInitials(agency.name)}</AvatarFallback>
+                      </Avatar>
+                      <span>{agency.name}</span>
+                    </div>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
         
         <div className="ml-auto flex items-center gap-4">
           <div className="relative hidden md:block">
@@ -48,9 +80,11 @@ const Navbar = () => {
             <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500"></span>
           </Button>
           
-          <Button variant="ghost" size="icon">
-            <Settings className="h-5 w-5" />
-          </Button>
+          <Link to="/settings">
+            <Button variant="ghost" size="icon">
+              <Settings className="h-5 w-5" />
+            </Button>
+          </Link>
           
           {currentUser ? (
             <DropdownMenu>
