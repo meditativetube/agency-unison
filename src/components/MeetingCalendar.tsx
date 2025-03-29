@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useUser } from './UserProvider';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const formSchema = z.object({
   title: z.string().min(2, { message: 'Title must be at least 2 characters long' }),
@@ -61,6 +62,7 @@ const MeetingCalendar = () => {
     }
   ]);
   const { allUsers } = useUser();
+  const isMobile = useIsMobile();
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -110,18 +112,20 @@ const MeetingCalendar = () => {
   };
 
   return (
-    <div className="grid gap-6 md:grid-cols-7">
+    <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-7">
       <Card className="md:col-span-2">
-        <CardHeader className="pb-3">
-          <CardTitle>Calendar</CardTitle>
+        <CardHeader className="pb-2 md:pb-3">
+          <CardTitle className="text-base md:text-lg">Calendar</CardTitle>
         </CardHeader>
-        <CardContent>
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            className="rounded-md border"
-          />
+        <CardContent className="p-2 md:p-4">
+          <div className="flex justify-center">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              className="rounded-md border mx-auto"
+            />
+          </div>
           <div className="mt-4">
             <Dialog>
               <DialogTrigger asChild>
@@ -130,7 +134,7 @@ const MeetingCalendar = () => {
                   Add New Event
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px]">
+              <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Schedule a new event</DialogTitle>
                 </DialogHeader>
@@ -191,7 +195,7 @@ const MeetingCalendar = () => {
                       )}
                     />
                     
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
                         name="startTime"
@@ -312,7 +316,7 @@ const MeetingCalendar = () => {
                       )}
                     />
                     
-                    <DialogFooter>
+                    <DialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
                       <DialogClose asChild>
                         <Button type="button" variant="outline">Cancel</Button>
                       </DialogClose>
@@ -327,11 +331,13 @@ const MeetingCalendar = () => {
       </Card>
       
       <Card className="md:col-span-5">
-        <CardHeader className="pb-3">
-          <CardTitle>
+        <CardHeader className="pb-2 md:pb-3">
+          <CardTitle className="text-base md:text-lg">
             {date ? (
               <div className="flex items-center justify-between">
-                <span>Events for {format(date, 'PPPP')}</span>
+                <span className="text-sm md:text-base truncate">
+                  {format(date, isMobile ? 'MMM d, yyyy' : 'PPPP')}
+                </span>
                 <Button variant="ghost" size="sm" onClick={() => setDate(new Date())}>
                   Today
                 </Button>
@@ -341,35 +347,35 @@ const MeetingCalendar = () => {
             )}
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-2 md:p-4">
           {eventsForSelectedDate.length > 0 ? (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {eventsForSelectedDate.map((event) => (
-                <div key={event.id} className="rounded-lg border p-4 transition-all hover:shadow-md">
-                  <div className="flex flex-col space-y-2 md:flex-row md:items-start md:justify-between md:space-y-0">
+                <div key={event.id} className="rounded-lg border p-3 md:p-4 transition-all hover:shadow-md">
+                  <div className="flex flex-col space-y-3 md:flex-row md:items-start md:justify-between md:space-y-0">
                     <div>
-                      <div className="flex items-center">
-                        <h3 className="text-lg font-semibold text-foreground">{event.title}</h3>
-                        <span className="ml-2 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-base md:text-lg font-semibold text-foreground">{event.title}</h3>
+                        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300">
                           {event.type}
                         </span>
                       </div>
-                      <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mt-2">
+                      <div className="flex flex-wrap items-center gap-3 text-xs md:text-sm text-muted-foreground mt-2">
                         <div className="flex items-center gap-1">
-                          <Clock className="h-4 w-4" />
+                          <Clock className="h-3 w-3 md:h-4 md:w-4" />
                           <span>{event.startTime} ({event.duration})</span>
                         </div>
-                        <div>{event.location}</div>
+                        <div className="truncate max-w-[180px] md:max-w-none">{event.location}</div>
                       </div>
                       {event.description && (
-                        <p className="mt-2 text-sm">{event.description}</p>
+                        <p className="mt-2 text-xs md:text-sm line-clamp-2 md:line-clamp-none">{event.description}</p>
                       )}
                     </div>
                     
-                    <div className="flex items-center">
-                      <div className="flex flex-col items-end gap-2">
+                    <div className="flex items-center mt-2 md:mt-0">
+                      <div className="flex flex-col items-end gap-1 md:gap-2">
                         <div className="flex items-center">
-                          <Users className="mr-1 h-4 w-4 text-muted-foreground" />
+                          <Users className="mr-1 h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
                           <span className="text-xs text-muted-foreground">
                             {event.participants.length} participant{event.participants.length !== 1 ? 's' : ''}
                           </span>
@@ -378,16 +384,16 @@ const MeetingCalendar = () => {
                           {event.participants.slice(0, 3).map((participantId) => {
                             const user = findUserById(participantId);
                             return (
-                              <Avatar key={participantId} className="h-7 w-7 border-2 border-background">
+                              <Avatar key={participantId} className="h-6 w-6 md:h-7 md:w-7 border-2 border-background">
                                 <AvatarImage src={user?.avatar} />
-                                <AvatarFallback className="text-xs">
+                                <AvatarFallback className="text-[8px] md:text-[10px]">
                                   {user ? getInitials(user.name) : 'U'}
                                 </AvatarFallback>
                               </Avatar>
                             );
                           })}
                           {event.participants.length > 3 && (
-                            <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-background bg-muted text-xs">
+                            <div className="flex h-6 w-6 md:h-7 md:w-7 items-center justify-center rounded-full border-2 border-background bg-muted text-[8px] md:text-xs">
                               +{event.participants.length - 3}
                             </div>
                           )}
@@ -399,9 +405,9 @@ const MeetingCalendar = () => {
               ))}
             </div>
           ) : (
-            <div className="flex min-h-[200px] flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
-              <h3 className="mt-2 text-lg font-semibold">No events scheduled</h3>
-              <p className="mb-4 mt-1 text-sm text-muted-foreground">
+            <div className="flex min-h-[150px] md:min-h-[200px] flex-col items-center justify-center rounded-lg border border-dashed p-4 md:p-8 text-center">
+              <h3 className="mt-2 text-base md:text-lg font-semibold">No events scheduled</h3>
+              <p className="mb-4 mt-1 text-xs md:text-sm text-muted-foreground">
                 There are no events scheduled for this date. Click the "Add New Event" button to create one.
               </p>
               <Dialog>
@@ -411,7 +417,7 @@ const MeetingCalendar = () => {
                     Add New Event
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[500px]">
+                <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
                   {/* Same dialog content as above */}
                 </DialogContent>
               </Dialog>
