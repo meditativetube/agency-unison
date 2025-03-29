@@ -30,8 +30,67 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Check if we're in GitHub Pages environment
-const isGitHubPages = window.location.hostname.includes("github.io");
+// More reliable detection of GitHub Pages environment
+const isGitHubPages = 
+  window.location.hostname.includes("github.io") || 
+  window.location.hostname.includes(".github.") ||
+  window.location.href.includes("?ghp=true"); // For testing GitHub Pages mode locally
+
+const Router = isGitHubPages ? HashRouter : BrowserRouter;
+const routeElements = [
+  {
+    path: "/",
+    element: (
+      <AppLayout>
+        <Index />
+      </AppLayout>
+    ),
+  },
+  {
+    path: "/tasks",
+    element: (
+      <AppLayout>
+        <Tasks />
+      </AppLayout>
+    ),
+  },
+  {
+    path: "/team",
+    element: (
+      <AppLayout>
+        <Team />
+      </AppLayout>
+    ),
+  },
+  {
+    path: "/meetings",
+    element: (
+      <AppLayout>
+        <Meetings />
+      </AppLayout>
+    ),
+  },
+  {
+    path: "/finance",
+    element: (
+      <AppLayout>
+        <Finance />
+      </AppLayout>
+    ),
+  },
+  {
+    path: "/settings",
+    element: (
+      <AppLayout>
+        <Settings />
+      </AppLayout>
+    ),
+  },
+  {
+    path: "*",
+    element: <NotFound />,
+  },
+];
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -40,117 +99,13 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          {isGitHubPages ? (
-            // Use HashRouter for GitHub Pages
-            <HashRouter>
-              <Routes>
-                <Route 
-                  path="/" 
-                  element={
-                    <AppLayout>
-                      <Index />
-                    </AppLayout>
-                  } 
-                />
-                <Route 
-                  path="/tasks" 
-                  element={
-                    <AppLayout>
-                      <Tasks />
-                    </AppLayout>
-                  } 
-                />
-                <Route 
-                  path="/team" 
-                  element={
-                    <AppLayout>
-                      <Team />
-                    </AppLayout>
-                  } 
-                />
-                <Route 
-                  path="/meetings" 
-                  element={
-                    <AppLayout>
-                      <Meetings />
-                    </AppLayout>
-                  } 
-                />
-                <Route 
-                  path="/finance" 
-                  element={
-                    <AppLayout>
-                      <Finance />
-                    </AppLayout>
-                  } 
-                />
-                <Route 
-                  path="/settings" 
-                  element={
-                    <AppLayout>
-                      <Settings />
-                    </AppLayout>
-                  } 
-                />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </HashRouter>
-          ) : (
-            // Use BrowserRouter for local development
-            <BrowserRouter>
-              <Routes>
-                <Route 
-                  path="/" 
-                  element={
-                    <AppLayout>
-                      <Index />
-                    </AppLayout>
-                  } 
-                />
-                <Route 
-                  path="/tasks" 
-                  element={
-                    <AppLayout>
-                      <Tasks />
-                    </AppLayout>
-                  } 
-                />
-                <Route 
-                  path="/team" 
-                  element={
-                    <AppLayout>
-                      <Team />
-                    </AppLayout>
-                  } 
-                />
-                <Route 
-                  path="/meetings" 
-                  element={
-                    <AppLayout>
-                      <Meetings />
-                    </AppLayout>
-                  } 
-                />
-                <Route 
-                  path="/finance" 
-                  element={
-                    <AppLayout>
-                      <Finance />
-                    </AppLayout>
-                  } 
-                />
-                <Route 
-                  path="/settings" 
-                  element={
-                    <AppLayout>
-                      <Settings />
-                    </AppLayout>
-                  } 
-                />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          )}
+          <Router>
+            <Routes>
+              {routeElements.map((route) => (
+                <Route key={route.path} path={route.path} element={route.element} />
+              ))}
+            </Routes>
+          </Router>
         </TooltipProvider>
       </UserProvider>
     </ThemeProvider>
