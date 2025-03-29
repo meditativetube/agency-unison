@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { useTheme } from '@/components/ThemeProvider';
 import { useToast } from '@/hooks/use-toast';
-import { Language, Moon, DollarSign, Clock } from 'lucide-react';
+import { Globe, Moon, DollarSign, Clock } from 'lucide-react';
 
 const AppPreferences = () => {
   const { theme, toggleTheme } = useTheme();
@@ -34,7 +34,7 @@ const AppPreferences = () => {
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <Language className="h-5 w-5 text-blue-500" />
+            <Globe className="h-5 w-5 text-blue-500" />
             <h3 className="text-lg font-medium">Language</h3>
           </div>
           

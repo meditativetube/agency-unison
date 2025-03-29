@@ -38,7 +38,7 @@ const UserManagement = () => {
       name: newUser.name,
       email: newUser.email,
       role: newUser.role,
-      authProvider: 'password',
+      authProvider: 'password' as 'password' | 'google' | 'github',
       avatar: `https://ui-avatars.com/api/?name=${newUser.name.replace(' ', '+')}&background=0D8ABC&color=fff`
     };
     
