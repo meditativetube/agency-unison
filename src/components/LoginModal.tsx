@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useUser, User } from './UserProvider';
-import { LogIn, ArrowRight, Github, Mail, CreditCard, Chrome, Microsoft } from 'lucide-react';
+import { LogIn, ArrowRight, Github, Mail, CreditCard, Chrome } from 'lucide-react';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
 type LoginView = 'login' | 'signup';
@@ -71,8 +71,8 @@ const LoginModal = () => {
       const newUserData = {
         name: provider.charAt(0).toUpperCase() + provider.slice(1) + ' User',
         email: `${provider}user@example.com`,
-        role: 'user' as const,
-        authProvider: provider as const,
+        role: 'user',
+        authProvider: provider,
         agencies: [agencies[0]],
         activeAgencyId: agencies[0].id
       };
@@ -111,7 +111,7 @@ const LoginModal = () => {
       email: signupEmail,
       phoneNumber: signupPhone,
       role: signupRole as 'admin' | 'cofounder' | 'user',
-      authProvider: 'password' as const,
+      authProvider: 'password',
       agencies: agencyObj ? [agencyObj] : undefined,
       activeAgencyId: selectedAgency
     });
@@ -237,7 +237,7 @@ const LoginModal = () => {
                 className="w-full justify-between border-blue-700 bg-blue-800/30 text-white hover:bg-blue-800/50 hover:text-white"
               >
                 <div className="flex items-center gap-2">
-                  <Microsoft className="h-4 w-4 text-blue-200" />
+                  <CreditCard className="h-4 w-4 text-blue-200" />
                   <span>Continue with Microsoft</span>
                 </div>
                 <ArrowRight className="h-4 w-4" />
@@ -370,7 +370,7 @@ const LoginModal = () => {
                   className="border-blue-700 bg-blue-800/30 text-white hover:bg-blue-800/50 hover:text-white"
                   size="icon"
                 >
-                  <Google className="h-4 w-4" />
+                  <Chrome className="h-4 w-4" />
                 </Button>
                 <Button 
                   type="button" 
