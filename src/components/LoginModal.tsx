@@ -26,7 +26,7 @@ const LoginModal = () => {
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupPhone, setSignupPhone] = useState('');
-  const [signupRole, setSignupRole] = useState('user');
+  const [signupRole, setSignupRole] = useState<'admin' | 'cofounder' | 'user'>('user');
   const [selectedAgency, setSelectedAgency] = useState(agencies[0]?.id || '');
   
   const [activeView, setActiveView] = useState<LoginView>('login');
@@ -71,8 +71,8 @@ const LoginModal = () => {
       const newUserData = {
         name: provider.charAt(0).toUpperCase() + provider.slice(1) + ' User',
         email: `${provider}user@example.com`,
-        role: 'user',
-        authProvider: provider,
+        role: 'user' as 'admin' | 'cofounder' | 'user',
+        authProvider: provider as 'password' | 'google' | 'microsoft' | 'gmail' | 'github',
         agencies: [agencies[0]],
         activeAgencyId: agencies[0].id
       };
@@ -110,8 +110,8 @@ const LoginModal = () => {
       name: signupName,
       email: signupEmail,
       phoneNumber: signupPhone,
-      role: signupRole as 'admin' | 'cofounder' | 'user',
-      authProvider: 'password',
+      role: signupRole,
+      authProvider: 'password' as 'password' | 'google' | 'microsoft' | 'gmail' | 'github',
       agencies: agencyObj ? [agencyObj] : undefined,
       activeAgencyId: selectedAgency
     });
