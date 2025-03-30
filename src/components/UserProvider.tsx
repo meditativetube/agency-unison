@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState } from 'react';
 
 type UserRole = 'admin' | 'cofounder' | 'user';
-type AuthProvider = 'password' | 'google' | 'microsoft' | 'gmail';
+type AuthProvider = 'password' | 'google' | 'microsoft' | 'gmail' | 'github';
 
 interface Agency {
   id: string;
@@ -10,7 +10,7 @@ interface Agency {
   logo?: string;
 }
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
@@ -18,6 +18,7 @@ interface User {
   salary?: number;
   avatar?: string;
   authProvider?: AuthProvider;
+  phoneNumber?: string;
   agencies?: Agency[];
   activeAgencyId?: string;
 }
@@ -33,6 +34,7 @@ interface UserContextType {
   signup: (userData: Omit<User, 'id'>) => void;
   setUsers: (users: User[]) => void;
   switchAgency: (agencyId: string) => void;
+  updateUserProfile: (updatedUser: Partial<User>) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -89,6 +91,7 @@ const mockUsers: User[] = [
     avatar: 'https://ui-avatars.com/api/?name=Sarah+Team&background=00A36C&color=fff',
     agencies: [mockAgencies[0], mockAgencies[2]],
     activeAgencyId: 'a1',
+    phoneNumber: '+1 (555) 123-4567',
   },
   {
     id: '4',
@@ -111,6 +114,18 @@ const mockUsers: User[] = [
     avatar: 'https://ui-avatars.com/api/?name=Emma+Designer&background=551A8B&color=fff',
     agencies: [mockAgencies[2]],
     activeAgencyId: 'a3',
+  },
+  {
+    id: '6',
+    name: 'Alex Developer',
+    email: 'alex@agencyunison.com',
+    role: 'user',
+    salary: 78000,
+    authProvider: 'github',
+    avatar: 'https://ui-avatars.com/api/?name=Alex+Developer&background=333&color=fff',
+    agencies: [mockAgencies[0], mockAgencies[1]],
+    activeAgencyId: 'a1',
+    phoneNumber: '+1 (555) 987-6543',
   }
 ];
 
@@ -135,9 +150,17 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   
   const signup = (userData: Omit<User, 'id'>) => {
     const newUserId = (users.length + 1).toString();
+    
+    // Generate avatar if not provided
+    let userAvatar = userData.avatar;
+    if (!userAvatar) {
+      userAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=0D8ABC&color=fff`;
+    }
+    
     const newUser: User = {
       id: newUserId,
       ...userData,
+      avatar: userAvatar,
       agencies: userData.agencies || [mockAgencies[0]],
       activeAgencyId: userData.activeAgencyId || mockAgencies[0].id
     };
@@ -154,6 +177,18 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       });
     }
   };
+  
+  const updateUserProfile = (updatedUser: Partial<User>) => {
+    if (currentUser) {
+      const updated = { ...currentUser, ...updatedUser };
+      setCurrentUser(updated);
+      
+      // Also update the user in the users array
+      setUsers(users.map(user => 
+        user.id === currentUser.id ? updated : user
+      ));
+    }
+  };
 
   return (
     <UserContext.Provider value={{ 
@@ -166,7 +201,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       logout,
       signup,
       setUsers,
-      switchAgency
+      switchAgency,
+      updateUserProfile
     }}>
       {children}
     </UserContext.Provider>
