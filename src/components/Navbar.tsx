@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Bell, Search, Settings, Sun, Moon, Building } from 'lucide-react';
 import { Button } from './ui/button';
@@ -9,10 +9,39 @@ import { useUser } from './UserProvider';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import LoginModal from './LoginModal';
+import NotificationPopover, { Notification } from './NotificationPopover';
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const { currentUser, logout, agencies, activeAgency, switchAgency } = useUser();
+  
+  // Mock notifications for demo purposes
+  const [notifications, setNotifications] = useState<Notification[]>([
+    {
+      id: '1',
+      title: 'New task assigned',
+      description: 'You have been assigned a new task: "Complete project proposal"',
+      read: false,
+      link: '/tasks',
+      createdAt: new Date(Date.now() - 1000 * 60 * 30) // 30 minutes ago
+    },
+    {
+      id: '2',
+      title: 'Team meeting reminder',
+      description: 'Don\'t forget about the team meeting today at 2:00 PM',
+      read: false,
+      link: '/meetings',
+      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2) // 2 hours ago
+    },
+    {
+      id: '3',
+      title: 'Welcome to AgencyUnison',
+      description: 'Welcome to the platform! Take a tour to learn about all features.',
+      read: true,
+      link: '/',
+      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2) // 2 days ago
+    }
+  ]);
 
   const getInitials = (name: string) => {
     return name
@@ -20,6 +49,18 @@ const Navbar = () => {
       .map((part) => part[0])
       .join('')
       .toUpperCase();
+  };
+  
+  const markNotificationAsRead = (id: string) => {
+    setNotifications(notifications.map(notification => 
+      notification.id === id 
+        ? { ...notification, read: true } 
+        : notification
+    ));
+  };
+  
+  const clearAllNotifications = () => {
+    setNotifications([]);
   };
 
   return (
@@ -75,10 +116,13 @@ const Navbar = () => {
             {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </Button>
           
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500"></span>
-          </Button>
+          {currentUser && (
+            <NotificationPopover 
+              notifications={notifications} 
+              markAsRead={markNotificationAsRead}
+              clearAllNotifications={clearAllNotifications}
+            />
+          )}
           
           <Link to="/settings">
             <Button variant="ghost" size="icon">
