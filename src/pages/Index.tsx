@@ -1,7 +1,7 @@
 
 import React from 'react';
 import DashboardMetrics from '@/components/DashboardMetrics';
-import TaskList from '@/components/TaskList';
+import TaskList, { Task } from '@/components/TaskList';
 import TeamMembers from '@/components/TeamMembers';
 import MeetingScheduler from '@/components/MeetingScheduler';
 import SalaryOverview from '@/components/SalaryOverview';
@@ -11,6 +11,13 @@ import { AlertCircle } from 'lucide-react';
 
 const Index = () => {
   const { currentUser, isAdmin } = useUser();
+
+  // Sample tasks for the TaskList component
+  const dashboardTasks: Task[] = [
+    { id: '1', title: 'Review project proposal', assignee: 'John Smith', dueDate: '2023-10-15', status: 'in-progress' },
+    { id: '2', title: 'Team standup meeting', assignee: 'Emma Davis', dueDate: '2023-10-12', status: 'completed' },
+    { id: '3', title: 'Client presentation', assignee: 'Michael Brown', dueDate: '2023-10-20', status: 'pending' },
+  ];
 
   return (
     <div className="p-6 space-y-6 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
@@ -35,7 +42,7 @@ const Index = () => {
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <TaskList />
+          <TaskList tasks={dashboardTasks} />
         </div>
         <div>
           <TeamMembers />

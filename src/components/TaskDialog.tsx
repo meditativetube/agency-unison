@@ -42,6 +42,9 @@ const formSchema = z.object({
   status: z.enum(['completed', 'in-progress', 'pending'])
 });
 
+// Define a type for the form values based on the schema
+type FormValues = z.infer<typeof formSchema>;
+
 interface TaskDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -55,17 +58,18 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
 }) => {
   const { toast } = useToast();
   
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
       assignee: '',
       dueDate: new Date().toISOString().split('T')[0],
-      status: 'pending'
+      status: 'pending' as TaskStatus
     }
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = (values: FormValues) => {
+    // FormValues type matches Omit<Task, 'id'> because it has all the required fields
     onTaskCreate(values);
     form.reset();
     onOpenChange(false);
