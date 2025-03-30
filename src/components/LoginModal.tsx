@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -54,9 +53,6 @@ const LoginModal = () => {
   };
 
   const handleExternalLogin = (provider: 'google' | 'microsoft' | 'gmail' | 'github') => {
-    // In a real app, this would trigger OAuth authentication
-    // For this demo, we'll find a user with the matching provider
-    
     const user = allUsers.find(user => user.authProvider === provider);
     
     if (user) {
@@ -67,7 +63,6 @@ const LoginModal = () => {
       });
       setIsOpen(false);
     } else {
-      // If no user exists with this provider, we'll create a new user
       const newUserData = {
         name: provider.charAt(0).toUpperCase() + provider.slice(1) + ' User',
         email: `${provider}user@example.com`,
@@ -91,7 +86,6 @@ const LoginModal = () => {
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Check if email already exists
     const existingUser = allUsers.find(user => user.email === signupEmail);
     
     if (existingUser) {
@@ -103,7 +97,6 @@ const LoginModal = () => {
       return;
     }
     
-    // Create new user
     const agencyObj = agencies.find(agency => agency.id === selectedAgency);
     
     signup({
@@ -314,7 +307,10 @@ const LoginModal = () => {
               
               <div className="space-y-2">
                 <Label htmlFor="signup-role" className="text-blue-200">Role</Label>
-                <Select value={signupRole} onValueChange={setSignupRole}>
+                <Select 
+                  value={signupRole} 
+                  onValueChange={(value: 'admin' | 'cofounder' | 'user') => setSignupRole(value)}
+                >
                   <SelectTrigger className="bg-blue-800/30 border-blue-700 text-white">
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
