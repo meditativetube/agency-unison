@@ -35,6 +35,7 @@ export type Task = {
   status: TaskStatus;
 };
 
+// Define a schema where all fields are required (not optional)
 const formSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
   assignee: z.string().min(2, { message: "Assignee name is required" }),
@@ -69,8 +70,15 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
   });
 
   const onSubmit = (values: FormValues) => {
-    // FormValues type matches Omit<Task, 'id'> because it has all the required fields
-    onTaskCreate(values);
+    // Create a properly typed object to pass to onTaskCreate
+    const newTask: Omit<Task, 'id'> = {
+      title: values.title,
+      assignee: values.assignee,
+      dueDate: values.dueDate,
+      status: values.status as TaskStatus
+    };
+    
+    onTaskCreate(newTask);
     form.reset();
     onOpenChange(false);
     toast({
